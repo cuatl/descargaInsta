@@ -30,8 +30,15 @@
       $context = stream_context_create(['http'=>['user_agent'=> $agent ]]);
       $data = file_get_contents($url,false,$context);
       //
-      preg_match("/taken-by=(.*)\" rel/",$data,$y);
-      $path=(!empty($y[1]))? "instagram/".$y[1]."/": "instagram/";
+      preg_match("/\"owner\": {\"username\": \"(.*)\",\s\"is_unpublished\"/",$data,$y);
+      $username = null;
+      if(!empty($y[1])) $username = trim($y[1]);
+      if(empty($username)) {
+         preg_match("/taken-by=(.*)\" rel/",$data,$y);
+         $username = trim($y[1]);
+      }
+      $path=(!empty($username))? "instagram/".$username."/": "instagram/";
+      echo $username;
       if(!empty($path) && !is_dir($path)) mkdir($path,0755,true);
       //buscamos video
       preg_match("/property=\"og:video\" content=\"(.*)\"/",$data,$y);
@@ -39,8 +46,10 @@
          $imagen = $y[1];
          preg_match("/(.*)\/(.*)\.mp4/i",$imagen,$v);
          $name = empty($v[2]) ? uniqid() : $v[2];
-         echo "!\n => video ".$name.".mp4 ";
-         file_put_contents($path.$name.".mp4", file_get_contents($imagen,false,$context));
+         echo "! => video ".$name.".mp4 ";
+         if(!is_file($path.$name.".mp4")) {
+            file_put_contents($path.$name.".mp4", file_get_contents($imagen,false,$context));
+         }
          echo " ok!\n";
       } else {
          //buscamos imagen
@@ -49,8 +58,10 @@
             $imagen = $y[1];
             preg_match("/(.*)\/(.*)\.jpg/i",$imagen,$v);
             $name = empty($v[2]) ? uniqid() : $v[2];
-            echo "!\n => imagen ".$name.".jpg ";
-            file_put_contents($path.$name.".jpg", file_get_contents($imagen,false,$context));
+            echo "! => imagen ".$name.".jpg ";
+            if(!is_file($path.$name.".jpg")) {
+               file_put_contents($path.$name.".jpg", file_get_contents($imagen,false,$context));
+            }
             echo " ok!\n";
          }
       }
