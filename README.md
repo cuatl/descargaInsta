@@ -12,3 +12,7 @@ php descargaInsta.php lista.txt
 
 
 Más información: https://tar.mx/log/descargar-imagenes-de-instagram-con-php/
+
+Para usarse en Windows es necesario tener la extensión php_openssl, ejemplo en php.ini:
+
+extension=c:\torito\php\ext\php_openssl.dll
