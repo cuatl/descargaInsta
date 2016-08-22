@@ -6,7 +6,7 @@
    * @ToRo 2016
    */
    $url = (isset($argv[1]) && preg_match("/(instagram|\.txt)/i",$argv[1])) ? $argv[1] : null;
-   $tamano=0;
+   $no=$tamano=1;
    if(empty($url)) {
       die("\nUso: php $argv[0] FOTO_INSTAGRAM | TXT\n\n");
    }
@@ -17,15 +17,16 @@
       $tamano = sizeof($file);
       foreach($file AS $url) {
          if(preg_match("/instagram/",$url)) {
-            instagram($url);
+            instagram($url,$no."/".$tamano);
+            $no++;
          }
       }
    } else {
-      instagram($url);
+      instagram($url,$no."/".$tamano);
    }
-   function instagram($url) {
+   function instagram($url,$size) {
       $url = trim($url);
-      echo "* ".$url;
+      echo $size." ".$url;
       //
       $agent= "Mozilla/5.0 (Windows NT 6.0; rv:16.0) Firefox/13.0"; //user agent
       $context = stream_context_create(['http'=>['user_agent'=> $agent, 'referer'=> 'https://www.instagram.com/' ]]);
