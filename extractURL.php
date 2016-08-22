@@ -17,7 +17,7 @@
    preg_match_all("/href=\"\/p\/([A-Za-z0-9_\-]{1,})+\/\?taken/",$data,$y);
    if(!empty($y[1])) {
       foreach($y[1] AS $k) {
-         echo "https://www.instagram.com/p/".$k."/\n";
+         echo "https://www.instagram.com/p/".$k."/\r\n";
       }
    }
 ?>
